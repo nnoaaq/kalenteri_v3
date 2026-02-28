@@ -19,7 +19,9 @@ app.use(
   }),
 );
 const authRoutes = require("./routes/authRoutes");
+const pdfRoutes = require("./routes/pdfRoutes");
 app.use("/authenticate", authRoutes);
+app.use("/pdf", pdfRoutes);
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));

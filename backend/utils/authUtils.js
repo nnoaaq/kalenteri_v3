@@ -9,4 +9,11 @@ function createAuthClient() {
   );
   return oauth2Client;
 }
-module.exports = { createAuthClient };
+async function getTokensFromSesion() {
+  const tokensRes = await fetch("http://localhost:3000/authenticate/getTokens");
+  if (!tokensRes) return;
+  const tokens = await tokensRes.json();
+  console.log(tokens);
+  return tokens;
+}
+module.exports = { createAuthClient, getTokensFromSesion };
