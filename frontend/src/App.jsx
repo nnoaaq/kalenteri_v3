@@ -1,6 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrapin tyylit käyttöön
 import "./App.css";
 import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -8,7 +10,9 @@ import Alert from "react-bootstrap/Alert";
 import { MdErrorOutline } from "react-icons/md";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-import { useState } from "react";
+import { MdInfoOutline } from "react-icons/md";
+import { BsCalendar2Date } from "react-icons/bs";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -16,8 +20,11 @@ function App() {
   const [showError, setShowError] = useState(false);
   const [pdf, setPdf] = useState(false);
   const [calendar, setCalendar] = useState("mari");
-  const apiServer = "http://localhost:3000";
-
+  const formRef = useRef(null);
+  const apiServer = import.meta.env.VITE_SERVER;
+  console.log(apiServer);
+  const [workDays, setWorkDays] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   let errorMessages = {
     tokens: "Palvelinvirhe tokenien haussa",
     pdf: "Valitse PDF-tiedosto",
@@ -60,6 +67,7 @@ function App() {
       return;
     }
     setShowError(false);
+    setIsLoading(!isLoading);
     const data = new FormData();
     data.append("file", submittedPdf);
     data.append("choosenCalendar", choosenCalendar);
@@ -69,19 +77,26 @@ function App() {
         method: "POST",
         body: data,
       });
-      if (!sentPdf.ok) window.location.href = "/?error=workDays";
+      if (!sentPdf.ok) {
+        const error = await sentPdf.json();
+        console.log(error);
+        window.location.href = `/?error=${error.errCode}`;
+      }
       const addedWorkDays = await sentPdf.json(); // Palautetut tiedot = lista lisätyistä työpäivistä
-      console.log(addedWorkDays); // LISTA LISÄTYISTÄ TYÖPÄIVISTÄ date,lines kentät
+      // LISTA LISÄTYISTÄ TYÖPÄIVISTÄ date, lines kentät
+      setWorkDays(addedWorkDays);
+      formRef.current.reset();
+      setIsLoading(false);
     } catch (err) {
-      console.log(err);
+      console.log("Virhe: " + err);
     }
   }
   return (
     <Container
-      className="d-flex flex-column justify-content-center align-items-center h-100 "
+      className="d-flex flex-column justify-content-center align-items-center mt-2 "
       fluid
     >
-      <Card className="p-4 shadow-sm">
+      <Card className="p-4 shadow-sm ">
         {showError && (
           <Alert
             className="d-flex justify-content-between align-items-center"
@@ -119,7 +134,7 @@ function App() {
             </Container>
           )}
         </Container>
-        <Form>
+        <Form ref={formRef}>
           <Form.Group>
             <Form.Label>Valitse PDF-tiedosto</Form.Label>
             <Form.Control
@@ -136,16 +151,47 @@ function App() {
             </Form.Select>
           </Form.Group>
           <Form.Group className="d-grid gap-2 mt-2">
-            <Button
-              disabled={!isAuthenticated}
-              onClick={(e) => verifyFormSubmit(e)}
-              type="submit"
-            >
-              Tallenna
-            </Button>
+            {!isLoading ? (
+              <Button
+                disabled={!isAuthenticated}
+                onClick={(e) => verifyFormSubmit(e)}
+                type="submit"
+              >
+                Tallenna
+              </Button>
+            ) : (
+              <Button
+                disabled={!isAuthenticated}
+                onClick={(e) => verifyFormSubmit(e)}
+                type="submit"
+                className="d-flex justify-content-center align-items-center"
+              >
+                Tallennetaan
+                <div className="loader"></div>
+              </Button>
+            )}
           </Form.Group>
         </Form>
       </Card>
+      {workDays && (
+        <Container>
+          <Row xs={2} md={3} lg={5}>
+            {workDays.map((workDay) => (
+              <Col>
+                <Card className="text-center m-1 p-2">
+                  <h5 className="m-0 mb-1 border-bottom">
+                    <BsCalendar2Date className="m-1" />
+                    {workDay.date}
+                  </h5>
+                  <p className="m-0 mb-1">
+                    <MdInfoOutline /> {workDay.lines}
+                  </p>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Container>
+      )}
     </Container>
   );
 }

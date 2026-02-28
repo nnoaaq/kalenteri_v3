@@ -12,8 +12,7 @@ async function updateGoogleCalendar(workDays, tokens, calendarId) {
   };
   for (let workDay of workDays) {
     const addedWorkDay = await calendar.events.insert({
-      calendarId:
-        "ed4be497f000fbc4e4f59ce954078e09a1877cd9f2ff74ebce33f1e29a369671@group.calendar.google.com",
+      calendarId: calendarIds[calendarId],
       resource: workDay,
     });
     addedWorkDays.push({

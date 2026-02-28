@@ -15,9 +15,7 @@ Router.post("/add", upload.single("file"), async (req, res) => {
   if (!rawData) return res.redirect(`/?error=pdfText`);
   const workDays = await getWorkDays(rawData);
   if (workDays.length === 0)
-    return res
-      .status(404)
-      .json({ errMessage: "Tiedostosta ei löytynyt työpäiviä" });
+    return res.status(404).json({ errCode: "workDays" });
   // Työpäivä löytynyt
   const addedWorkDays =
     (await updateGoogleCalendar(
