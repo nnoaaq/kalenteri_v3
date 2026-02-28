@@ -15,7 +15,7 @@ function convertToISODate(date, time) {
   // time hh:mm
   const [day, month, year] = date.split(".").map(Number);
   const [hour, minute] = time.split(":").map(Number);
-  const dateObject = new Date(year, month - 1, day, hour, minute); // UTC AIKA
+  const dateObject = new Date(Date.UTC(year, month - 1, day, hour, minute)); // UTC AIKA
   return dateObject.toISOString();
 }
 function getWorkDays(rawData) {
