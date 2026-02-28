@@ -46,12 +46,10 @@ function getWorkDays(rawData) {
       description: "",
       summary: "",
       start: {
-        dateTime: "",
-        timeZone: "Europe/Helsinki",
+        dateTime: ""
       },
       end: {
-        dateTime: "",
-        timeZone: "Europe/Helsinki",
+        dateTime: ""
       },
     };
     const foundTimes = [];
