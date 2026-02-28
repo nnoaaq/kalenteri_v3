@@ -21,7 +21,7 @@ function App() {
   const [pdf, setPdf] = useState(false);
   const [calendar, setCalendar] = useState("mari");
   const formRef = useRef(null);
-  const apiServer = import.meta.env.VITE_SERVER;
+  const apiServer = "https://kalenteri-v3.onrender.com/";
   console.log(apiServer);
   const [workDays, setWorkDays] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
