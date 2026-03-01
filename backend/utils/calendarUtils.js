@@ -16,7 +16,12 @@ function convertToISODate(date, time) {
   const [day, month, year] = date.split(".").map(Number);
   const [hour, minute] = time.split(":").map(Number);
   const dateObject = new Date(Date.UTC(year, month - 1, day, hour, minute)); // UTC AIKA
-  return dateObject.toISOString();
+  const UTCYear = dateObject.getUTCFullYear();
+  const UTCMonth = dateObject.getUTCMonth();
+  const UTCDate = dateObject.getUTCDate();
+  const UTCHour = dateObject.getUTCHours();
+  const UTCMinute = dateObject.getUTCMinutes();
+  return `${UTCYear}-${UTCMonth}-${UTCDate}T${UTCHour}:${UTCMinute}`;
 }
 function getWorkDays(rawData) {
   const formattedWorkDays = [];
@@ -46,10 +51,10 @@ function getWorkDays(rawData) {
       description: "",
       summary: "",
       start: {
-        dateTime: ""
+        dateTime: "",
       },
       end: {
-        dateTime: ""
+        dateTime: "",
       },
     };
     const foundTimes = [];
