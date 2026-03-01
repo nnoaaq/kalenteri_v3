@@ -22,7 +22,7 @@ function convertToISODate(date, time) {
   const UTCHour = dateObject.getUTCHours();
   const UTCMinute = dateObject.getUTCMinutes();
   // return `${UTCYear}-${UTCMonth}-${UTCDate}T${UTCHour}:${UTCMinute}`;
-  return `${UTCYear}-${String(UTCMonth).padStart(2, "0")}-${String(UTCDate).padStart(2, "0")}T${String(UTCHour).padStart(2, "0")}:${String(UTCMinute).padStart(2, "0")}`;
+  return `${UTCYear}-${String(UTCMonth).padStart(2, "0")}-${String(UTCDate).padStart(2, "0")}T${String(UTCHour).padStart(2, "0")}:${String(UTCMinute).padStart(2, "0")}:00`;
 }
 function getWorkDays(rawData) {
   const formattedWorkDays = [];
@@ -48,7 +48,7 @@ function getWorkDays(rawData) {
   });
   for (let workDay of workDays) {
     const calendarFormat = {
-      // date: workDay.date,
+      //date: workDay.date,
       description: "",
       summary: "",
       start: {
@@ -119,7 +119,7 @@ function getWorkDays(rawData) {
       workDay.date,
       foundTimes[foundTimes.length - 1],
     );
-    formattedWorkDays.push(calendarFormat);
+    formattedWorkDays.push(JSON.stringify(calendarFormat));
   }
   return formattedWorkDays;
 }
