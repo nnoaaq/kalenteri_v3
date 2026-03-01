@@ -17,11 +17,12 @@ function convertToISODate(date, time) {
   const [hour, minute] = time.split(":").map(Number);
   const dateObject = new Date(Date.UTC(year, month - 1, day, hour, minute)); // UTC AIKA
   const UTCYear = dateObject.getUTCFullYear();
-  const UTCMonth = dateObject.getUTCMonth();
+  const UTCMonth = dateObject.getUTCMonth() + 1;
   const UTCDate = dateObject.getUTCDate();
   const UTCHour = dateObject.getUTCHours();
   const UTCMinute = dateObject.getUTCMinutes();
-  return `${UTCYear}-${UTCMonth}-${UTCDate}T${UTCHour}:${UTCMinute}`;
+  // return `${UTCYear}-${UTCMonth}-${UTCDate}T${UTCHour}:${UTCMinute}`;
+  return `${UTCYear}-${String(UTCMonth).padStart(2, "0")}-${String(UTCDate).padStart(2, "0")}T${String(UTCHour).padStart(2, "0")}:${String(UTCMinute).padStart(2, "0")}`;
 }
 function getWorkDays(rawData) {
   const formattedWorkDays = [];
@@ -47,14 +48,16 @@ function getWorkDays(rawData) {
   });
   for (let workDay of workDays) {
     const calendarFormat = {
-      date: workDay.date,
+      // date: workDay.date,
       description: "",
       summary: "",
       start: {
         dateTime: "",
+        timeZone: "Europe/Helsinki",
       },
       end: {
         dateTime: "",
+        timeZone: "Europe/Helsinki",
       },
     };
     const foundTimes = [];

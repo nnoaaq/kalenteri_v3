@@ -22,7 +22,6 @@ function App() {
   const [calendar, setCalendar] = useState("mari");
   const formRef = useRef(null);
   const apiServer = "https://kalenteri-v3.onrender.com";
-  console.log(apiServer);
   const [workDays, setWorkDays] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   let errorMessages = {
